@@ -3,7 +3,9 @@
 	<meta name='viewport' content='width=device-width, initial-scale=1'>
 	<link rel='stylesheet' href='https://www.w3schools.com/w3css/4/w3.css'>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-	<body >
+	<body class="image-1">
+	
+
 	<style>
 		html {
 		  scroll-behavior: smooth;
@@ -28,11 +30,25 @@
 		filter: blur(5px);
 		transition-property: -webkit-filter;
 		}
+
+		body {
+			
+  width: 100%;
+    background-position:center;
+    background-repeat: no-repeat;
+    background-size: cover;
+   background-attachment: fixed;
+   font-family: "MV Boli";
+		}
+		.image-1 {
+		background-image: url("test8.avif");
+
+		}
 		
 	</style>
 	
 	<!-- DEBUT MenuBar : Davide Di Venti Profil Projets Parcours Contact -->	
-	<div class='w3-bar ' style='z-index: 4; position: sticky; top: 0; background-color: white; font-size: 150%' >
+	<div class='w3-bar w3-black' style=' opacity: .7; z-index: 4; position: sticky; top: 0; background-color: white; font-size: 150%' >
 		<a class='w3-bar-item w3-left' style=' margin-left: 100px;' > <b> Davide Di Venti</b></a>	
 		<a href="index.html#contact" class='w3-bar-item w3-right w3-hover-text-grey' style='width:200px; cursor:pointer; text-decoration: none;' > Contact</a>
 		<a href="index.html#parcours" class='w3-bar-item w3-right w3-hover-text-grey' style='width:200px; cursor:pointer; text-decoration: none;' > Parcours</a>
@@ -74,7 +90,8 @@
 					3D, …), très créatif. 
 					</p>
 					<a href="documents/CV.pdf" download="DI VENTI Davide - CV">
-						<button class="w3-button w3-white w3-border" style = "font-size: 130%;">Curiculum Vitae</button>
+						
+						<a href="documents/CV.pdf" download="DI VENTI Davide - CV"style="font-size: 130%;">Curiculum Vitae</a>
 					</a>
 				</div>
 				<div class="w3-cell w3-mobile" style="padding-bottom:32"></div>			
@@ -545,7 +562,7 @@
 	<!-- FIN Accueil : Profil Projets Parcours Contact -->	
 	
 	<div id="contact">
-		<footer class="w3-container w3-bar" style="background-color: #ececec; ">
+		<footer class="w3-container w3-bar w3-black" style="opacity: .5">
 			<div class="w3-cell w3-mobile" style="padding-top:32"></div>
 			<div class="w3-cell-row w3-content" style="width:100%">
 				<!--  DEBUT Contact -->			
@@ -574,8 +591,8 @@
 				<!--  FIN Réseaux -->		
 				<!--  DEBUT CV -->
 				<div class="w3-cell w3-mobile w3-container w3-center " >
-					<a href="documents/CV.pdf" download="DI VENTI Davide - CV">
-						<button class="w3-button w3-border " style = "font-size: 130%; background-color: #ececec; ">Curiculum Vitae</button>
+					<a href="documents/CV.pdf" download="DI VENTI Davide - CV"style="font-size: 150%;">Curiculum Vitae</a>
+						
 					</a>
 					<div class="w3-cell w3-mobile" style="padding-bottom:32"></div>
 				</div>
@@ -589,7 +606,7 @@
 		
 
 		
-		<footer class="w3-container w3-text-white w3-bar " style="background-color: #0c0c0c; font-size: 150%">
+		<footer class="w3-container w3-text-white w3-bar w3-black" style=" opacity: .7; font-size: 150%">
 			<a class='w3-bar-item w3-left' style=' margin-left: 100px;' > <b> Davide Di Venti</b></a>	
 			<a href="index.html#contact" class='w3-bar-item w3-right w3-hover-text-grey' style='width:200px; cursor:pointer; text-decoration: none;' > Contact</a>
 			<a href="index.html#parcours" class='w3-bar-item w3-right w3-hover-text-grey' style='width:200px; cursor:pointer; text-decoration: none;' > Parcours</a>
