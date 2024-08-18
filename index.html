@@ -1,624 +1,1464 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel='stylesheet' href='https://www.w3schools.com/w3css/4/w3.css'>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<title>Galerie</title>
+<style>
+	body {
+		margin: 0;
+		padding: 0;
+		font-family: Arial, sans-serif;
+		background-color: white;
+		position: relative;
+		height: 100vh;
+		overflow-x: hidden; /* Empêche la barre de défilement horizontale */
+		background-image: url("images/Accueil/image2.png"); /* Image d'arrière-plan pour le body */
+	}
 
-<html>
-	<meta name='viewport' content='width=device-width, initial-scale=1'>
-	<link rel='stylesheet' href='https://www.w3schools.com/w3css/4/w3.css'>
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-	<body class="image-1">
+	#background-layer {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		z-index: -1;
+		background-image: url("images/Accueil/list/1.jpg");
+		background-size: auto 100vh; /* Adapté à la hauteur de l'écran */
+		background-repeat: no-repeat;
+		filter: blur(3px); /* Applique le flou */
+		transition: opacity 1s ease-in-out; /* Transition de fondu */
+		opacity: 0.5; /* Opacité réduite pour l'effet sombre */
+	}
+
+	#background-layer::after {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background-color: black; /* Couleur sombre */
+		opacity: 0.5; /* Opacité de l'overlay sombre */
+	}
+
+	body::after {
+		content: '';
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		z-index: -1; 
+		background-image: url("images/Accueil/image1.png");
+		background-size: cover; /* Couvrir tout l'élément body */
+		background-position: center center; 
+		background-repeat: no-repeat;
+	}
+	.main-content {
+		opacity: 0.5;
+		transition: opacity 0.5s ease-in-out;
+	}
+
+	.main-content.loaded {
+		opacity: 1;
+	}
+
+    .header {
+		position: fixed;
+		top: 0;
+		width: 100%;
+		background-color: black;
+		opacity: 0.8;
+		color: white;
+		padding: 10px 0;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		z-index: 1000;
+		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Ajout de l'ombre */
+	}
+
+	.header .title {
+		margin-left: 20px;
+		font-size: 1.5em;
+	}
+
+	.header .social-icons {
+		margin-right: 20px;
+		display: flex; /* Utiliser Flexbox pour aligner les icônes horizontalement */
+		align-items: center; /* Centrer verticalement les icônes */
+	}
+
+	.header .social-icons a {
+		color: white;
+		margin-left: 20px; /* Ajouter un espacement entre les icônes */
+		font-size: 1.5em;
+		text-decoration: none;
+	}
+
+	.header .social-icons img {	
+		margin-left: 20px; /* Espacement entre l'image et les icônes */
+		width: 40px; /* Taille des images ajustée */
+	}
+
+	
+    .container {
+        display: flex;
+        flex-wrap: wrap;
+        max-width: 1920px;
+        margin: 80px auto 0; 
+        padding: 20px;
+    }
+
+	.left-column {
+		width: 20%;
+		padding: 20px;
+		box-sizing: border-box;
+		position: sticky;
+		top: 80px;
+		align-self: flex-start;
+		background-color: white;
+		z-index: 1; 
+		border-radius: 5px;
+		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Ajout de l'ombre */
+		opacity: 0.85;
+		font-size: 1.2em;
+		line-height: 1.5;
+		color: #585858; 
+		transition: transform 0.3s ease-in-out;
+	}
+	
+	.left-column:hover {
+		transform: translateY(-2%);
+	}
+	
+    .right-column {
+        width: 80%;
+        padding: 20px; 
+    }
+	
+	.guide {		
+		width: 100%;
+		background-color: rgba(0, 0, 0, 0.5);
+		margin-bottom: 20px;
+		color: white;
+		border-radius: 5px;
+		padding-left: 30px;
+		padding-right: 30px;
+		font-size: 1.5em;
+		padding-top: 5px;
+		padding-bottom: 5px;
+		
+	}
 	
 
-	<style>
-		html {
-		  scroll-behavior: smooth;
+    .cataloge_section {
+        margin-bottom: 20px;
+    }
+
+    .photos {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: flex-start; /* Aligner les photos sur le côté gauche */
+		align-items: flex-start; /* Aligner les éléments au début */ margin: 0 -10px; /* Compense les marges internes des photos */
+	}
+
+	.photo {
+		flex: 1 1 calc(25% - 20px); /* 4 colonnes par défaut */
+		max-width: calc(25% - 20px);
+		margin: 10px;
+		overflow: hidden;
+		position: relative;
+		border-radius: 5px;
+		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+		opacity: 0.9;
+		transition: transform 0.3s ease-in-out;
+		cursor: pointer;
+		
+	}
+
+	.photo img {
+		width: 100%;
+		height: auto;
+		display: block;
+	}
+
+	.photo:hover {
+		transform: scale(1.03) translateY(-5%); /* Zoomer et déplacer vers le haut */
+		opacity: 1;
+	}
+	.up-animation {
+		animation: up 0.5s ease-in-out 1; /* Animation de 0.3s, répétée 4 fois */
+	}
+
+
+		@keyframes up {
+		0% { transform: translateY(0%); }
+		50% { transform: translateY(-10%); }
+		100% { transform: translateY(0%); }
+	}
+	
+	.catalog-photo {
+		flex: 1 1 calc(25% - 20px); /* 4 colonnes par défaut */
+		max-width: calc(25% - 20px); /* Espacement entre les photos */
+		margin: 15px;
+		margin-bottom: 5px;
+		margin-left: 5px;
+		overflow: hidden;
+		position: relative;
+		border-radius: 5px;
+		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Ajout de l'ombre */
+		opacity: 0.9;
+		transition: transform 0.3s ease-in-out; /* Transition pour l'effet de zoom */		
+		cursor: pointer; /* Curseur pointer pour indiquer que l'image est cliquable */
+		transition: opacity 0.3s ease-in-out; /* Transition pour l'effet de changement d'opacité */
+	}
+
+	.catalog-photo img {
+		width: 100%;
+		height: auto;
+		display: block;		
+	}
+
+	.catalog-photo:hover {
+		opacity: 1;
+	}
+	.video-container {
+		position: relative;
+		width: 100%; 
+		padding-bottom: 56.25%; /* 16:9 ratio */
+		height: 0;
+		overflow: hidden;
+		margin-top: 15px;
+		margin-left: -5px; /* Décalage de 10 pixels vers la gauche */
+		
+	}
+
+	.video-container iframe {
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		border-radius: 5px;
+		opacity: 0.95;
+		transition: opacity 0.3s ease-in-out; /* Transition pour l'effet de changement d'opacité */
+		left: 0; /* Assurer que la vidéo commence à gauche */
+		
+	}
+
+	.video-container iframe:hover {
+		opacity: 1;
+	}
+
+
+	.zoomed-in {
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		z-index: 1000;
+		background-color: rgba(0, 0, 0, 0.9); /* Fond semi-transparent pour l'effet de zoom */
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.zoomed-in img {
+		max-width: 80%;
+		max-height: 80%;
+		object-fit: contain; /* Ajustement de la taille de l'image tout en conservant son ratio */
+	}
+
+	.description {
+		flex: 1 1 calc(75% - 25px); 
+		max-width: calc(75% - 25px); 
+		margin: 10px;
+		overflow: hidden;
+		position: relative;
+		background-color: rgba(0, 0, 0, 0.5);
+		color: white;
+		box-sizing: border-box;
+		display: none;
+		border-radius: 5px;
+		margin-left: 10px;
+		margin-right: 15px;
+		animation: up 0.5s ease;
+		padding-left: 30px;
+		padding-top: 15px;
+		padding-bottom: 15px;
+		font-size: 1.5em;
+		grid-template-columns: 150px 1fr;
+		gap: 10px;
+		
+		padding-right: 20px;
+	}
+
+	.description p {
+		display: contents; /* Utiliser 'contents' pour que les enfants soient directement dans la grille */
+	}
+	.description b {
+		grid-column: 1; /* Première colonne pour le texte en gras */
+	}
+	.description span {
+		grid-column: 2; /* Deuxième colonne pour le texte normal */
+	}
+
+	.zoom-navigation {
+		position: fixed;
+		top: 50%;
+		transform: translateY(-50%);
+		display: flex;
+		justify-content: space-between;
+		width: 100%;
+		z-index: 1000; /* Assure que les flèches sont au-dessus de tout le contenu */
+		opacity: 0.6;
+	}
+	.zoom-navigation img{
+		width: 5%;
+	}
+
+	.zoom-nav-button {
+		
+		color: white;
+		border: none;
+		padding: 10px;
+		font-size: 1.5em;
+		cursor: pointer;
+		transition: background-color 0.3s ease;
+		transition: transform 0.3s ease-in-out;
+	}
+
+	.zoom-nav-button:hover {
+		background-color: rgba(0, 0, 0, 0.7);
+		
+	}
+
+	.title-page {
+		text-align: right;
+		margin-right: 60px;
+		font-size: 6em;
+	}
+
+	.subtitle-page {
+		text-align: right;
+		margin-right: 60px;
+		font-size: 3em;
+		color: #585858;  
+	}
+	.subsubtitle-page {
+		text-align: right;
+		margin-right: 20px;
+		font-size: 2em;
+		color: #585858;   
+	}
+
+	.title-page p, .subtitle-page p, .subsubtitle-page p {
+		line-height: 0; /* Ajuste la hauteur de ligne pour réduire l'interligne */
+	}
+	
+	 .descriptionText {
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            font-size: 1.2em;
+            margin-top: 0;
+            margin-bottom: 0;
+            padding: 10px;
+        }
+	
+    @media screen and (max-width: 1600px) {
+        .photo {
+            flex: 1 1 calc(33.33% - 20px);
+            max-width: calc(33.33% - 20px);
+        }
+		.catalog-photo {
+            flex: 1 1 calc(33.33% - 20px);
+            max-width: calc(33.33% - 20px);
+        }
+		.description {
+			flex: 1 1 calc(66.66% - 25px); 
+			max-width: calc(66.66%  - 25px); 
 		}
-		.fa {
-		  padding: 10px;
-		  font-size: 30px;
-		  width: 50px;
-		  text-align: center;
-		  text-decoration: none;
-		  margin: 5px 5px;
-		}
-		.fa:hover {
-			opacity: 0.7;
-		}
-		.fa-facebook {
-		  background: #3B5998;
-		  color: white;
+		.zoom-navigation img{
+			width: 6.5%;
 		}
 		
-		.spoiler_flou {
-		filter: blur(5px);
-		transition-property: -webkit-filter;
+		.left-column {
+			width: 30%;
+			padding: 20px;
+			box-sizing: border-box;
+			position: sticky;
+			top: 80px;
+			align-self: flex-start;
+			background-color: white; /* Ajout de couleur de fond blanc */
+			z-index: 1; /* Assurez-vous que la colonne reste en arrière-plan par rapport au contenu principal */
+			border-radius: 5px; 
+		}
+		.right-column {
+			width: 70%;
+			padding: 20px;
+			box-sizing: border-box;
+		}
+		.title-page {
+			text-align: right;
+			margin-right: 60px;
+			font-size: 5em;
 		}
 
-		body {
+		.subtitle-page {
+			text-align: right;
+			margin-right: 60px;
+			font-size: 2.5em;
+			color: #585858;  
+		}
+		.subsubtitle-page {
+			text-align: right;
+			margin-right: 20px;
+			font-size:1.5em;
+			color: #585858;   
+		}
+		
+    }
+
+
+    @media screen and (max-width: 1100px) {
+        .photo {
+            flex: 1 1 calc(50% - 20px);
+            max-width: calc(50% - 20px);
+        }
+		.catalog-photo {
+            flex: 1 1 calc(50% - 20px);
+            max-width: calc(50% - 20px);
+        }
+		.description {
+			flex: 1 1 calc(100% - 20px); 
+			max-width: calc(100%  - 20px); 
+		}
+		.zoom-navigation img{
+			width: 8.5%;
+		}
+		.container {
+            flex-direction: column;
+        }
+
+        .left-column {
+			width: calc(70% - 60px); /* Réduit la largeur de 60px pour tenir compte des marges de 30px de chaque côté */
+			margin: 0 auto; /* Centre l'élément horizontalement */
+			padding-left: 30px; /* Ajoute une marge intérieure de 30px à gauche */
+			padding-right: 30px; /* Ajoute une marge intérieure de 30px à droite */
+			order: 2;
+			position: relative;
+			top: 0;
+			align-self: auto; /* Réinitialise l'alignement */
+		}
+
+        .right-column {
+            width: 100%;
+            order: 1;
+        }
+		
+		.title-page {
+			text-align: right;
+			margin-right: 60px;
+			font-size: 3em;
+		}
+
+		.subtitle-page {
+			text-align: right;
+			margin-right: 60px;
+			font-size: 1.5em;
+			color: #585858;  
+		}
+		.subsubtitle-page {
+			font-size: 0em;		 
+		}
+    }
+
+    @media screen and (max-width: 600px) {
+        .photo {
+            flex: 1 1 calc(100%);
+            max-width: calc(100%);		
+        }
+
+		.container {
+			margin: 0px auto 0; 
+			padding: 0px;
+		}
+		.description { 
+			font-size: 1em;
+			grid-template-columns: 100px 1fr;
+		}
+
+		.catalog-photo {
+            flex: 1 1 calc(100% - 20px);
+            max-width: calc(100% - 20px);
+        }
+		.description {
+			flex: 1 1 calc(100% - 20px); 
+			max-width: calc(100%  - 20px); 
+		}
+		.zoom-navigation img{
+			width: 10.5%;
+		}
+		.left-column {
+			width: calc(100% - 40px); /* Réduit la largeur de 60px pour tenir compte des marges de 30px de chaque côté */
+			margin: 0 auto; /* Centre l'élément horizontalement */
+			padding-left: 30px; /* Ajoute une marge intérieure de 30px à gauche */
+			padding-right: 30px; /* Ajoute une marge intérieure de 30px à droite */
+			margin-bottom: 20px;
+			order: 2;
+			position: relative;
+			top: 0;
+			align-self: auto; /* Réinitialise l'alignement */
+		}
+		.guide{
+		font-size: 1.1em;
+		}
+		
+		.title-page {
+			text-align: right;
+			margin-right: 20px;
+			font-size: 2em;
+		}
+
+		.subtitle-page {
+			text-align: right;
+			margin-right: 20px;
+			font-size: 1.3em;
+			color: #585858;  
+		}
+		.subsubtitle-page {
+			font-size: 0em;	
 			
-  width: 100%;
-    background-position:center;
-    background-repeat: no-repeat;
-    background-size: cover;
-   background-attachment: fixed;
-   font-family: "MV Boli";
 		}
-		.image-1 {
-		background-image: url("test8.avif");
-
-		}
-		
-	</style>
+    }
 	
-	<!-- DEBUT MenuBar : Davide Di Venti Profil Projets Parcours Contact -->	
-	<div class='w3-bar w3-black' style=' opacity: .7; z-index: 4; position: sticky; top: 0; background-color: white; font-size: 150%' >
-		<a class='w3-bar-item w3-left' style=' margin-left: 100px;' > <b> Davide Di Venti</b></a>	
-		<a href="index.html#contact" class='w3-bar-item w3-right w3-hover-text-grey' style='width:200px; cursor:pointer; text-decoration: none;' > Contact</a>
-		<a href="index.html#parcours" class='w3-bar-item w3-right w3-hover-text-grey' style='width:200px; cursor:pointer; text-decoration: none;' > Parcours</a>
-		<a href="index.html#projets"  class='w3-bar-item w3-right w3-hover-text-grey' style='width:200px; cursor:pointer; text-decoration: none;'> Projets</a>
-		<a href="index.html#profil" class='w3-bar-item w3-right w3-hover-text-grey' style='width:200px; cursor:pointer; text-decoration: none;'> Profil</a>
-		<a href="index.html#accueil" class='w3-bar-item w3-right w3-hover-text-grey' style='width:200px; cursor:pointer; text-decoration: none;'> Accueil</a>
+
+	
+	.hover-gif img {
+		transition: all 0.3s ease-in-out;
+	}
+
+	 .play-button-container {
+            background-color: red;
+            border-radius: 8px; 
+            padding: 5px;           
+        }
+	
+	
+
+	
+	
+</style>
+</head>
+<body>
+
+    <div  class="main-content" id="background-layer"></div>
+	
+    <div class="header">
+        <div class="title">Project catalog</div>
+        <div class="social-icons">
+			<!-- <a><img src="gif/white-arrow.gif" ></a> -->
+			<a href="https://github.com" target="_blank" class="fa fa-github w3-hover-text-grey"></a>
+			<a href="https://facebook.com" target="_blank" class="fa fa-facebook w3-hover-text-grey"></a>
+			<a href="https://linkedin.com" target="_blank" class="fa fa-linkedin w3-hover-text-grey"></a>
+		</div>
+    </div>
+	<br><br><br>
+	<div class="title-page">
+		<p><b>Project Catalog</b></p>
 	</div>
-	<!-- FIN MenuBar : Davide Di Venti Profil Projets Parcours Contact -->
-	
-	<!-- DEBUT Accueil : Profil Projets Parcours Contact -->	
-	<div id="accueil" class="w3-animate-opacity" style='display: block;'>	
-		<div class="w3-display-container w3-text-light-grey">
-			<img src="images\Accueil\image4.jpg"  style="width:100%" alt="Snow" class="spoiler_flou" >
-			<div class="w3-display-middle">
-				<div class="w3-center" style="font-size: 400%"> Davide Di Venti</div>
-				<div class="w3-center" style="font-size: 230%"> Bachelor Automatisation</div>
-				<div class="w3-center" style="font-size: 160%"> Robotique, Electronique, Mécanique, Electricité, Programmation ... </div>
-				
-			</div>	
-		</div>
-		<!--  DEBUT Profil -->	
-		<br/><br/><br/><br/><br/><br/><br/id="profil"><br/><br/><br/>		
-		<div class= "w3-center" style="font-size: 200%"> <b> Mon Profil</b></div>
-		<br/><br/><br/><br/><br/>
-		<div>
-			<div class="w3-cell-row w3-content" style="width:100%">
-				
-				<div class="w3-cell w3-mobile w3-container" style="width:40%; text-align: justify">
-					<div style="font-size: 170%"> <b>Qui suis-je ?</b></div>
-					<p style = "font-size: 130%;">
-					21ans, étudiant en Automatisation 
-					depuis 3 ans, très bonnes notions 
-					d’électricité, bases solides en 
-					électronique et en programmation, 
-					amateur dans la mécanique 
-					d’usinage, bonne maitrise dans 
-					l’utilisation des machines (tours à 
-					métaux, fraiseuses, CNC, Imprimante 
-					3D, …), très créatif. 
-					</p>
-					<a href="documents/CV.pdf" download="DI VENTI Davide - CV">
-						
-						<a href="documents/CV.pdf" download="DI VENTI Davide - CV"style="font-size: 130%;">Curiculum Vitae</a>
-					</a>
-				</div>
-				<div class="w3-cell w3-mobile" style="padding-bottom:32"></div>			
-				<div class="w3-cell w3-mobile w3-container">
-					<div class='w3-col w3-right' style='width:100%;'>
-					<img src="images/profil.jpeg" alt="Lights" style="width:100%">
-				</div>
-				</div>
-			</div>
-			<br/><br/><br/><br/><br/>
-			<div class="w3-cell-row w3-content" style="width:100%">
-				
-				<div class="w3-cell w3-mobile w3-container" style="width:100%; text-align: justify">
-					<div style="font-size: 170%"> <b>Mes compétences</b></div>
-					<p style = "font-size: 130%;">
-					
-					<b>Electricité, Electronique et Programmation</b><br><br>
-					
-					• Bonne Interprétation de schémas / programmes<br>
-					• Conception de cartes électroniques<br>
-					• Programmations de microcontrôleurs & PLC<br>
-					• Rédaction d’un code complexe sous plusieurs langages <br>
-					• Débogage efficace d’un code en cas d’erreurs<br><br><br>
-					
-					<b>Mécanique, Modélisation, Maniement de machines</b><br><br>
-					
-					• Passionné en ébénisterie<br>
-					• Excellente maitrise de la modélisation 3D d’un objet mécanique<br>
-					• Bon maniement d'outils manuels et mécaniques<br>
-					• Bonnes connaissances sur les concepts mécaniques <br>
-					• Maitrise de l’utilisation de machines d’usinages industrielles (CNC, Imprimantes 3D, Tours à métaux, Fraiseuses, … )<br><br><br>
-					
-					<b>Qualités</b><br><br>
-					
-					• Bonne dextérité manuelle <br>
-					• Esprit innovateur<br>
-					• Fait preuve d'une grande motivation personnelle<br>
-					</p>
-					
-				</div>
-				<div class="w3-cell w3-mobile" style="padding-bottom:32"></div>			
-			</div>
-			<br/><br/><br/><br/><br/>
-			<div class="w3-cell-row w3-content" style="width:100%">			
-				<div class="w3-cell w3-mobile w3-container" style="width:100%; text-align: justify">
-					<div style="font-size: 170%"> <b>Ma personnalité</b></div>
-					<p style = "font-size: 130%;">
-					Je suis une personne très calme. Quelle que soit la situation, je reste zen, et je ne présente que très peu de changement de comportement. Je suis persévérant, et ambitieux dans mes tâches. J’apporte une attention particulière à la gestion des travaux qui me sont attribués. Je sais définir mes priorités sur base des situations qui s’offrent à moi. <br><br>
-					Je suis prêt à aider mon prochain, je présente quelques symptômes de timidité, mais j’essaye toujours de surmonter cette limite. <br><br>
-					En équipe, j’ai tendance à vouloir commander. Je le fais délicatement, je me mets à la place de mes camarades. Je présente mes idées, j’écoute celles des autres, et je les mets tous à profit pour que tout le monde soit satisfait.<br><br>
-					J’ai du mal à improviser. Cela ne m’est pas naturel. J’ai appris à réfléchir avant de parler, et je me suis entrainé tout au long de mon cursus du bachelier. Quand le sujet de conversation correspond à mon domaine, je sais improviser. Mais dans tous les autres cas, je fais l’effort de m’éloigner discrètement avant d’être rejeté. C’est ma méthode, et avec toute mon expérience, je me sens nettement plus confiant. Je suis donc une personne qui a tendance à être solitaire, mais fais l’effort d’aller vers l’autre.<br><br>
-					Je suis une personne amicale, sérieuse, attentionnée, curieuse, pensive et créative. Je pense que mon image plait aux autres, je ne cherche pas à aller plus loin.<br><br>
-
-					</p>
-					
-				</div>
-				<div class="w3-cell w3-mobile" style="padding-bottom:32"></div>			
-			</div>
-			<br/><br/><br/><br/><br/>
-			<div class="w3-cell-row w3-content" style="width:100%">		
-				<div class="w3-cell w3-mobile w3-container" style="width:100%; text-align: justify">
-					<div style="font-size: 170%"> <b>Mon expérience professionnelle</b></div>
-					<p style = "font-size: 130%;">
-					Durant mon cursus en bachelier, j’ai été amené à faire des visites en entreprises. La période était celle du COVID, donc les visites ont été effectuées à distance. <br><br>
-					En plus de ces visites, j’ai également travaillé en tant que stagiaire à la STIB en 2019. Cela m’a apporté une première vue sur le monde du travail.<br><br>
-					Dans ces rubriques, je présente mes ressentis et prises de notes.<br>
-
-					</p>		
-				</div>
-				<div class="w3-cell w3-mobile" style="padding-bottom:32"></div>			
-			</div>
-			
-			<div class="w3-cell-row w3-content" style="width:100%">
-				<!--  DEBUT Entreprise 1 -->
-				<div class="w3-cell w3-mobile w3-container">
-					<div class="w3-display-container w3-text-white w3-hover-opacity" >
-						<a href="Audi.html">
-							<img src="images\Entreprises\Audi\image accueil.JPG"  style="width:100%" >
-						</a>
-						<div class="w3-display-bottomleft w3-margin" >
-							<div style="font-size: 150%"> <b>Audi</b></div>
-						</div>					
-					</div>
-				</div>
-				<!--  FIN Entreprise 1 -->
-				<div class="w3-cell w3-mobile" style="padding-bottom:32"></div>
-				<div class="w3-cell w3-mobile" style="padding-right:5"></div>
-				<!--  DEBUT Entreprise 2 -->
-				<div class="w3-cell w3-mobile w3-container">
-					<div class="w3-display-container w3-text-white w3-hover-opacity">
-						<a href="Engie.html">
-							<img src="images\Entreprises\Engie\image accueil.jpg"  style="width:100%">
-						</a>
-						<div class="w3-display-bottomleft w3-margin">
-							<div style="font-size: 150%"> <b>Engie</b></div>
-						</div>	
-					</div>
-				</div>
-				<!--  FIN Entreprise 2 -->
-			</div>
-			<div class="w3-cell w3-mobile" style="padding-bottom:32"></div>
-			<div class="w3-cell-row w3-content" style="width:100%">
-				<!--  DEBUT Entreprise 3 -->
-				<div class="w3-cell w3-mobile w3-container">
-					<div class="w3-display-container w3-text-white w3-hover-opacity" >
-						<a href="Veolia.html">
-							<img src="images\Entreprises\Veolia\image accueil.jpg"  style="width:100%" >
-						</a>
-						<div class="w3-display-bottomleft w3-margin" >
-							<div style="font-size: 150%"> <b>Veolia</b></div>
-						</div>						
-					</div>
-				</div>
-				<!--  FIN Entreprise 3 -->
-				<div class="w3-cell w3-mobile" style="padding-bottom:32"></div>
-				<div class="w3-cell w3-mobile" style="padding-right:5"></div>
-				<!--  DEBUT Entreprise 4 -->
-				<div class="w3-cell w3-mobile w3-container">
-					<div class="w3-display-container w3-text-white w3-hover-opacity">
-						<a href="STIB.html">
-							<img src="images\Entreprises\STIB\image accueil.png"  style="width:100%">
-						</a>
-						<div class="w3-display-bottomleft w3-margin">
-							<div style="font-size: 150%"> <b>STIB</b></div>
-						</div>	
-					</div>
-				</div>
-				<!--  FIN Entreprise 4 -->
-			</div>
-			
-		</div>
-			
-		</div>
-		<!--  FIN Profil -->
-		<!--  DEBUT Projets -->	
-		<br/><br/><br/><br/><br/><br/><br/id="projets"><br/><br/><br/>
-		<div  class= "w3-center" style="font-size: 200%; "> <b> Mes Projets</b></div>
-		<br/><br/><br/><br/><br/>
-		<div>
-			<div class="w3-cell-row w3-content" style="width:100%">
-				<!--  DEBUT Projet principale 1 -->
-				<div class="w3-cell w3-mobile w3-container">
-					<div class="w3-display-container w3-text-white w3-hover-opacity" >
-						<a href="Industry 4.0 prototyping Boards.html">
-							<img src="images\Mes Projets\Industry 4.0 prototyping Boards/image accueil.png"  style="width:100%" >
-						</a>
-						<div class="w3-display-bottomleft w3-margin" >
-							<div style="font-size: 150%"> <b>Industry 4.0 prototyping Boards</b></div>
-						</div>
-						<div class="w3-display-topright w3-margin">
-							<div style="font-size: 100%"> <b>10.02.2022 - 17.06.2022</b></div>
-						</div>						
-					</div>
-				</div>
-				<!--  FIN Projet principale 1 -->
-				<div class="w3-cell w3-mobile" style="padding-bottom:32"></div>
-				<div class="w3-cell w3-mobile" style="padding-right:5"></div>
-				<!--  DEBUT Projet principale 2 -->
-				<div class="w3-cell w3-mobile w3-container">
-					<div class="w3-display-container w3-text-white w3-hover-opacity">
-						<a href="ArduiTank.html">
-							<img src="images\Mes Projets\ArduiTank/image accueil.png"  style="width:100%">
-						</a>
-						<div class="w3-display-bottomleft w3-margin">
-							<div style="font-size: 150%"> <b>ArduiTank</b></div>
-						</div>	
-						<div class="w3-display-topright w3-margin">
-							<div style="font-size: 100%"> <b>10.02.2021 - 28.05.2021</b></div>
-						</div>
-					</div>
-				</div>
-				<!--  FIN Projet principale 2 -->
-			</div>
-			<div class="w3-cell w3-mobile" style="padding-bottom:32"></div>
-			<div class="w3-cell-row w3-content" style="width:100%">
-				<!--  DEBUT Projet principale 3 -->
-				<div class="w3-cell w3-mobile w3-container">
-					<div class="w3-display-container w3-text-white w3-hover-opacity">
-						<a href="B - D 20.html">
-							<img src="images\Mes Projets\B - D 20/image accueil.png"  style="width:100%">
-						</a>
-						<div class="w3-display-bottomleft w3-margin">
-							<div style="font-size: 150%"> <b>B - D 20</b></div>
-						</div>	
-						<div class="w3-display-topright w3-margin">
-							<div style="font-size: 100%"> <b>10.01.2019 - 15.06.2019</b></div>
-						</div>
-					</div>
-				</div>
-				<!--  FIN Projet principale 3 -->
-				<div class="w3-cell w3-mobile" style="padding-bottom:32"></div>
-				<div class="w3-cell w3-mobile" style="padding-right:5"></div>
-				<!--  DEBUT Projet principale 4 -->
-				<div class="w3-cell w3-mobile w3-container">
-					<div class="w3-display-container w3-text-white w3-hover-opacity">
-						<a href="Char de M. Propre.html">
-							<img src="images\Mes Projets\Char de M. Propre\image accueil.png"  style="width:100%">
-						</a>
-						<div class="w3-display-bottomleft w3-margin">
-							<div style="font-size: 150%"> <b>Char de M. Propre</b></div>
-						</div>	
-						<div class="w3-display-topright w3-margin">
-							<div style="font-size: 100%"> <b>17.04.2018 - 11.06.2018</b></div>
-						</div>
-					</div>
-				</div>
-				<!--  FIN Projet principale 4 -->
-			</div>
-			<div class="w3-cell w3-mobile" style="padding-bottom:32"></div>
-			<div class="w3-cell-row w3-content" style="width:100%">
-				<!--  DEBUT Projet principale 5 -->
-				<div class="w3-cell w3-mobile w3-container">
-					<div class="w3-display-container w3-text-white w3-hover-opacity">
-						<a href="Portillon Poulailler.html">
-							<img src="images\Mes Projets\Portillon Poulailler\image accueil.jpeg"  style="width:100%">
-						</a>
-						<div class="w3-display-bottomleft w3-margin">
-							<div style="font-size: 150%"> <b>Portillon Poulailler</b></div>
-						</div>	
-						<div class="w3-display-topright w3-margin">
-							<div style="font-size: 100%"> <b>24.08.2020 - 03.11.2020</b></div>
-						</div>
-					</div>
-				</div>
-				<!--  FIN Projet principale 5 -->
-				<div class="w3-cell w3-mobile" style="padding-bottom:32"></div>
-				<div class="w3-cell w3-mobile" style="padding-right:5"></div>
-				<!--  DEBUT Projet principale 6 -->
-				<div class="w3-cell w3-mobile w3-container">
-					<div class="w3-display-container w3-text-white w3-hover-opacity">
-						<a href="AdventureWorld.html">
-							<img src="images\Mes Projets\AdventureWorld\image accueil.jpg"  style="width:100%">
-						</a>
-						<div class="w3-display-bottomleft w3-margin">
-							<div style="font-size: 150%"> <b>AdventureWorld</b></div>
-						</div>	
-						<div class="w3-display-topright w3-margin">
-							<div style="font-size: 100%"> <b>10.02.2020 - 25.05.2020</b></div>
-						</div>
-					</div>
-				</div>
-				<!--  FIN Projet principale 6 -->
-			</div>
-			<div class="w3-cell w3-mobile" style="padding-bottom:32"></div>
-			<div class="w3-cell-row w3-content" style="width:100%">
-				<!--  DEBUT Projet principale 7 -->
-				<div class="w3-cell w3-mobile w3-container">
-					<div class="w3-display-container w3-text-white w3-hover-opacity">
-						<a href="AdventureWorld V2.html">
-							<img src="images\Mes Projets\AdventureWorld V2\image accueil.png"  style="width:100%">
-						</a>
-						<div class="w3-display-bottomleft w3-margin">
-
-							<div style="font-size: 150%"> <b>AdventureWorld V2</b></div>
-						</div>	
-						<div class="w3-display-topright w3-margin">
-							<div style="font-size: 100%"> <b>13.07.2020 - 05.08.2020</b></div>
-						</div>
-					</div>
-				</div>
-				<!--  FIN Projet principale 7 -->
-				<div class="w3-cell w3-mobile" style="padding-bottom:32"></div>
-				<div class="w3-cell w3-mobile" style="padding-right:5"></div>
-				<!--  DEBUT Projet principale 8 -->
-				<div class="w3-cell w3-mobile w3-container">
-					<div class="w3-display-container w3-text-white w3-hover-opacity">
-						<a href="Pont Pegasus.html">
-							<img src="images\Mes Projets\Pont Pegasus\image accueil.png"  style="width:100%">
-						</a>
-						<div class="w3-display-bottomleft w3-margin">
-							<div style="font-size: 150%"> <b>Pont Pegasus</b></div>
-						</div>	
-						<div class="w3-display-topright w3-margin">
-							<div style="font-size: 100%"> <b>08.09.2016 - 04.06.2017</b></div>
-						</div>
-					</div>
-				</div>
-				<!--  FIN Projet principale 8 -->
-			</div>
-			<div class="w3-cell w3-mobile" style="padding-bottom:32"></div>
-			<div class="w3-cell-row w3-content" style="width:100%">
-				<!--  DEBUT Projet principale 9 -->
-				<div class="w3-cell w3-mobile w3-container">				
-					<div class="w3-display-container w3-text-white w3-hover-opacity">
-						<a href="Baby Foot.html">
-							<img src="images\Mes Projets\Baby Foot\image accueil.jpg"  style="width:100%">
-						</a>
-						<div class="w3-display-bottomleft w3-margin">
-							<div style="font-size: 150%"> <b>Baby Foot</b></div>
-						</div>
-						<div class="w3-display-topright w3-margin">
-							<div style="font-size: 100%"> <b>06.04.2019 - 07.04.2019</b></div>
-						</div>
-					</div>
-				</div>
-				<!--  FIN Projet principale 9 -->
-				<div class="w3-cell w3-mobile" style="padding-bottom:32"></div>
-				<div class="w3-cell w3-mobile" style="padding-right:5"></div>
-				<!--  DEBUT Projet principale 10 -->
-				<div class="w3-cell w3-mobile w3-container">
-					<div class="w3-display-container w3-text-white w3-hover-opacity">
-						<a href="Crusher.html">
-							<img src="images\Mes Projets\Crusher\image accueil.jpg"  style="width:100%">
-						</a>
-						<div class="w3-display-bottomleft w3-margin">
-							<div style="font-size: 150%"> <b>Crusher</b></div>
-						</div>	
-						<div class="w3-display-topright w3-margin">
-							<div style="font-size: 100%"> <b>07.11.2021 - 31.12.2021</b></div>
-						</div>
-					</div>
-				</div>
-				<!--  FIN Projet principale 10 -->
-			</div>
-			<div class="w3-cell w3-mobile" style="padding-bottom:32"></div>
-			<div class="w3-cell-row w3-content" style="width:100%">
-				<!--  DEBUT Projet principale 11 -->
-				<div class="w3-cell w3-mobile w3-container">
-					<div class="w3-display-container w3-text-white w3-hover-opacity">
-						<a href="Servante - Muret.html">
-							<img src="images\Mes Projets\Servante - Muret\image accueil.jpg"  style="width:100%">
-						</a>
-						<div class="w3-display-bottomleft w3-margin">
-							<div style="font-size: 150%"> <b>Servante - Muret</b></div>
-						</div>	
-						<div class="w3-display-topright w3-margin">
-							<div style="font-size: 100%"> <b>24.08.2021 - 27.08.2021</b></div>
-						</div>
-					</div>
-				</div>
-				<!--  FIN Projet principale 11 -->
-				<div class="w3-cell w3-mobile" style="padding-bottom:32"></div>
-				<div class="w3-cell w3-mobile" style="padding-right:5"></div>
-				<!--  DEBUT Projet principale 12 -->
-				<div class="w3-cell w3-mobile w3-container">
-					<div class="w3-display-container w3-text-white w3-hover-opacity">
-						<a href="Alimentation.html">
-							<img src="images\Mes Projets\Alimentation\image accueil.png"  style="width:100%">
-						</a>
-						<div class="w3-display-bottomleft w3-margin">
-							<div style="font-size: 150%"> <b>Alimentation</b></div>
-						</div>	
-						<div class="w3-display-topright w3-margin">
-							<div style="font-size: 100%"> <b>15.09.2017 - 02.12.2017</b></div>
-						</div>
-					</div>
-				</div>
-				<!--  FIN Projet principale 12 -->
-			</div>
-		</div>
-		
-		<!--  FIN Projets -->
-
-
-		
-		<!--  DEBUT Parcours -->
-		<br/><br/><br/><br/><br/><br/><br/id="parcours"><br/><br/><br/>
-		<div class= "w3-center" style="font-size: 200%"> <b> Mon Parcours</b></div>
-		<br/><br/><br/><br/><br/>
-
-		<div>
-			<div class="w3-cell-row w3-content" style="width:100%">
-				<!--  DEBUT Section 1 -->
-				<div class="w3-cell w3-mobile w3-container" style="width:50%">
-					<b style="font-size: 150%;"> Haute Ecole - EPHEC Isat [Schaerbeek]</b>
-					<p style = "font-size: 130%; text-align: justify">
-					<b>Période: </b>15.09.2019 au 30.06.22<br>
-					<b>Orientation: </b> Bachelier en Automatisation<br>
-					<b>Activités: </b> Electricité industrielle, Electronique, Programmation , 
-					Automation PLC, Robotique, Réseaux industriel, … <br>
-					<b>Stage/TFE: </b> Développement de PCBs consacrés aux principes de l’IoT
-					et de l’industrie 4.0. PCBs multifonctions supportants les protocoles
-					standardisés Zigbee, SigFox, LoRa, Wi-Fi, Bluetooth, IR, CAN, I²C & SPI.
-					</p>
-					
-				</div>
-				<!--  FIN Section 1 -->
-				<div class="w3-cell w3-mobile" style="padding-bottom:32"></div>
-				<div class="w3-cell w3-mobile" style="padding-right:32"></div>
-				<!--  DEBUT Section 2 -->
-				<div class="w3-cell w3-mobile w3-container " style="width:50%">
-					<b style="font-size: 150%;"> Ecole Secondaire Technique – Institut Saint Joseph [Etterbeek]</b>
-					<p style = "font-size: 130%; text-align: justify">
-					<b>Période: </b>01.09.2015 au 30.06.2019<br>
-					<b>Orientation: </b> Qualification Electricien Automaticien<br>
-					<b>Activités: </b> Electricité industrielle, Electronique, Automatisation PLC, …<br>
-					<b>Stage STIB: </b> Restauration de pièces mécanique, hydraulique et 
-					électrique, Assistance a un automaticien, …
-					</p>
-				</div>
-				<!--  FIN Section 2 -->
-			</div>
-			<div class="w3-cell w3-mobile" style="padding-bottom:32"></div>
-			<div class="w3-cell-row w3-content" style="width:100%">
-				<!--  DEBUT Section 3 -->
-				<div class="w3-cell w3-mobile w3-container" style="width:50%">
-					<b style="font-size: 150%;"> CVO Semper [Strombeek]</b>
-					<p style = "font-size: 130%; text-align: justify">
-					<b>Période: </b>15.09.2018 au 30.06.2019<br>
-					<b>Orientation: </b> Cetrification Néerlandais B2<br>
-					<b>Activités: </b> Savoir écrire, lire, parler et écouter en néerlandais<br>
-					
-					</p>
-				</div>
-				<!--  FIN Section 3 -->
-				<div class="w3-cell w3-mobile" style="padding-bottom:32"></div>
-				<div class="w3-cell w3-mobile" style="padding-right:32"></div>
-				<!--  DEBUT Section 4 -->
-				<div class="w3-cell w3-mobile w3-container" style="width:50%">
-					<b style="font-size: 150%;"> Institut Notre Dame [Anderlecht]</b>
-					<p style = "font-size: 130%; text-align: justify">
-					<b>Période: </b>01.09.2014 au 30.06.2015<br>
-					<b>Orientation: </b> 2e Secondaire<br>
-					</p>
-				</div>
-				<!--  FIN Section 4 -->
-			</div> 
-			<div class="w3-cell w3-mobile" style="padding-bottom:32"></div>
-			<div class="w3-cell-row w3-content" style="width:100%">
-				<!--  DEBUT Section 5 -->
-				<div class="w3-cell w3-mobile w3-container" style="width:50%">
-					<b style="font-size: 150%;"> Athénée Émile Bockstael [Laeken]</b>
-					<p style = "font-size: 130%; text-align: justify">
-					<b>Période: </b>15.09.2013 au 30.06.2014<br>
-					<b>Orientation: </b> 2e Secondaire<br>					
-					</p>
-				</div>
-				<!--  FIN Section 5 -->
-				<div class="w3-cell w3-mobile" style="padding-bottom:32"></div>
-				<div class="w3-cell w3-mobile" style="padding-right:32"></div>
-				<!--  DEBUT Section 6 -->
-				<div class="w3-cell w3-mobile w3-container" style="width:50%">
-					<b style="font-size: 150%;"> Italie - Sicile [Calascibetta]</b>
-					<p style = "font-size: 130%; text-align: justify">
-					<b>Période: </b>01.09.2011 au 30.06.2013<br>
-					<b>Orientation: </b> 6e Primaire - 1e Secondaire<br>
-					</p>
-				</div>
-				<!--  FIN Section 6 -->
-			</div>
-			<div class="w3-cell w3-mobile" style="padding-bottom:32"></div>
-			<div class="w3-cell-row w3-content" style="width:100%">
-				<!--  DEBUT Section 7 -->
-				<div class="w3-cell w3-mobile w3-container" style="width:50%">
-					<b style="font-size: 150%;"> Athénée Émile Bockstael [Laeken]</b>
-					<p style = "font-size: 130%; text-align: justify">
-					<b>Période: </b>15.09.2003 au 30.06.2011<br>
-					<b>Orientation: </b> Maternelles - 5e Primaire<br>					
-					</p>
-				</div>
-				<!--  FIN Section 7 -->
-				<div class="w3-cell w3-mobile" style="padding-bottom:32"></div>
-				<div class="w3-cell w3-mobile" style="padding-right:32"></div>
-				<!--  DEBUT Section 8 -->
-				<!-- <div class="w3-cell w3-mobile w3-container" style="width:50%"> -->
-					<!-- <b style="font-size: 150%;"> Ecole [localisation]</b> -->
-					<!-- <p style = "font-size: 130%; text-align: justify"> -->
-					<!-- <b>Période: </b>date au date<br> -->
-					<!-- <b>Orientation: </b> orientation<br> -->
-					<!-- </p> -->
-				<!-- </div> -->
-				<!--  FIN Section 8 -->
-			</div>
-		</div>
-		<!--  FIN Parcours -->			
-		<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>		
-	</div>	
-	<!-- FIN Accueil : Profil Projets Parcours Contact -->	
-	
-	<div id="contact">
-		<footer class="w3-container w3-bar w3-black" style="opacity: .5">
-			<div class="w3-cell w3-mobile" style="padding-top:32"></div>
-			<div class="w3-cell-row w3-content" style="width:100%">
-				<!--  DEBUT Contact -->			
-				<div class="w3-cell w3-mobile w3-container w3-center">
-					<b style="font-size: 150%;"> Contact</b><br/>
-					<p style = "font-size: 130%;">davidedi20@hotmail.fr</p>
-					<p style = "font-size: 130%;">+32 477 80 28 70</p>
-				</div>
-				<!--  FIN Contact -->
-				<!--  DEBUT Adresse -->			
-				<div class="w3-cell w3-mobile w3-container w3-center">
-					<b style="font-size: 150%;"> Adresse</b><br/>
-					<p style = "font-size: 130%;">3 Sleutelbloemstraat</p>
-					<p style = "font-size: 130%;">1850 Grimbergen</p>
-				</div>
-				<!--  FIN Adresse -->	
-			</div> 
-			<div class="w3-cell-row w3-content" style="width:100%">
-				
-				<!--  DEBUT Reseaux -->
-				<div class="w3-cell w3-mobile w3-container w3-center" style="padding-bottom:32; padding-right:32;">
-					<b style="font-size: 150%;"> Réseaux sociaux</b><br>
-					<a href="https://www.facebook.com/davide.diventi.5" class="fa fa-facebook"> </a>
-				</div>
-				
-				<!--  FIN Réseaux -->		
-				<!--  DEBUT CV -->
-				<div class="w3-cell w3-mobile w3-container w3-center " >
-					<a href="documents/CV.pdf" download="DI VENTI Davide - CV"style="font-size: 150%;">Curiculum Vitae</a>
-						
-					</a>
-					<div class="w3-cell w3-mobile" style="padding-bottom:32"></div>
-				</div>
-				<!--  FIN CV -->
-			</div> 
-			<p style = "font-size: 100%; text-align: center">
-			© 2022 idées de conception du Portfolio par <a href="https://www.behance.net/Chloe-Delamarre/" >Chloé</a> & <a href="https://adrianodiventi.wixsite.com/portfolio/" >Adriano</a><br>
-			© 2022 programmé par <a href="https://davidediventi.github.io/Portfolio/" >Davide</a>
-			</p>
-		</footer>
-		
-
-		
-		<footer class="w3-container w3-text-white w3-bar w3-black" style=" opacity: .7; font-size: 150%">
-			<a class='w3-bar-item w3-left' style=' margin-left: 100px;' > <b> Davide Di Venti</b></a>	
-			<a href="index.html#contact" class='w3-bar-item w3-right w3-hover-text-grey' style='width:200px; cursor:pointer; text-decoration: none;' > Contact</a>
-			<a href="index.html#parcours" class='w3-bar-item w3-right w3-hover-text-grey' style='width:200px; cursor:pointer; text-decoration: none;' > Parcours</a>
-			<a href="index.html#projets"  class='w3-bar-item w3-right w3-hover-text-grey' style='width:200px; cursor:pointer; text-decoration: none;'> Projets</a>
-			<a href="index.html#profil" class='w3-bar-item w3-right w3-hover-text-grey' style='width:200px; cursor:pointer; text-decoration: none;'> Profil</a>
-			<a href="index.html#accueil" class='w3-bar-item w3-right w3-hover-text-grey' style='width:200px; cursor:pointer; text-decoration: none;'> Accueil</a>
-		</footer>
+	<div class="subtitle-page">
+		<p>By : Davide Di Venti</p>
 	</div>
 	
 	
 	
+    <div class="container ">
+	
+        <div class="left-column">
+			<br>		
+			<div style="text-align: center;"><img src="images/profil.jpg" class="w3-circle" style="width: 70%; display: block; margin: 0 auto;"></div>		
+			<p style="text-align: center; font-size: 1.3em; color: black; line-height: 0;"><b>Davide Di Venti</b></p>
+			<p style="text-align: center; line-height: 0.5; margin-bottom: 40px"> Industrial Electronics Engineer</p>
+			
+			<div class="hover-gif">
+				<p> <img src="gif/info.png" data-animated="gif/info.gif" style="width:8%; line-height: 0;"> Passionate about : </p>
+				<p style="text-indent: 40px; line-height: 0.3; font-size: 0.9em;">- Woodworking</p>
+				<p style="text-indent: 40px; line-height: 0.3; font-size: 0.9em;">- Mechanical machining</p>
+				<p style="text-indent: 40px; line-height: 0.3; font-size: 0.9em;">- Programming</p>
+				<p style="text-indent: 40px; line-height: 0.3; font-size: 0.9em;">- Electronics</p>
+			</div>
+			
+			<a class="hover-gif" href="mailto:davidedi20@hotmail.fr" style="text-decoration: none;"><p><img  src="gif/email.png" data-animated="gif/email.gif" style="width:8%; line-height: 0"> davidedi20@hotmail.fr</p></a>
+			<p class="hover-gif"><img src="gif/home.png" data-animated="gif/home.gif" style="width:8%; line-height: 0"> Grimbergen - Belgium</p>
+			<a class="hover-gif" href="#" style="text-decoration: none;"><p><img  src="gif/file.png" data-animated="gif/file.gif" style="width:8%; line-height: 0;"> Download CV</p></a>
+		
+		</div>
+		
+		
+        <div class="right-column">
+			<div class="guide hover-gif">
+				<p><img src="gif/white-info.png" data-animated="gif/white-info.gif" style="width: 30px; margin-right:10px ;line-height: 0"> Website under development: some sections and links may not be fully functional yet. </p>
+			</div>
+			
+			<div class="cataloge_section">
+				<div class="photos">
+					
+					<!-- Photo principale n°6 -->
+					<div class="photo" onclick="openImage(this)"><img src="images\Mes Projets\Pont Pegasus\image accueil.png">
+						<p class="descriptionText hover-gif ">
+							Pegasus Bridge - 2016
+							<img class="play-button-container" src="gif/white-play.png" data-animated="gif/white-play.gif" style="width: 30px; float: right;">
+						</p>
+					</div>
+					<div class="description hover-gif">
+						<p><b>Name</b> <span> Pegasus Bridge</span></p>
+						<p><b>Type</b> <span> School project [By 5 students]</span></p>
+						<p><b>Period</b> <span> September 2016 - Juni 2017 (15-16 yo)</span></p>
+						<p><b>Budget</b> <span> ~ €-</span></p>
+						<p><b>Description</b> <span> This miniature project is the 1935 Pegasus Bridge in 1/50 scale, using aluminum for the frame, including a wiper motor for the rack-guided lifting mechanism.</span></p>
+						<p><b>Link</b> <span>/<img src="gif/white-article.png" data-animated="gif/white-article.gif" style="width: 30px; float: right; margin-right: 15px"></span></p>
+					</div>
+					
+					<!-- Photo principale n°10 -->
+					<div class="photo" onclick="openImage(this)"><img src="images\Mes Projets\Alimentation\image accueil.png">
+						<p class="descriptionText">
+							Power Supply - 2017
+							
+						</p>
+					</div>
+					<div class="description hover-gif" >
+						<p><b>Name</b> <span> Variable Power Supply</span></p>
+						<p><b>Type</b> <span> School project [Solo]</span></p>
+						<p><b>Period </b> <span> September-December 2017 (16 yo)</span></p>
+						<p><b>Budget</b> <span> ~ €- </span></p>
+						<p><b>Description</b> <span> Design and manufacture of a stabilized and regulated 0-24V DC 0.5A power supply including a transformer, a diode bridge, a regulator, a ballast transistor, and filter capacitors, with a case made from cut, traced and folded sheet metal.</span></p>
+						<p><b>Link</b> <span>/<img src="gif/white-article.png" data-animated="gif/white-article.gif" style="width: 30px; float: right; margin-right: 15px"></span></p>
+					</div>
+					
+					<!-- Photo principale n°4 -->
+					<div class="photo" onclick="openImage(this)"><img src="images\Mes Projets\Char de M. Propre\image accueil.png">
+					<p class="descriptionText hover-gif">
+							Tank of Mr. Clean - 2018
+							<img class="play-button-container" src="gif/white-play.png" data-animated="gif/white-play.gif" style="width: 30px; float: right;">
+						</p>
+					</div>
+					<div class="description hover-gif" >
+						<p><b>Name</b> <span> Tank of Mr. Clean</span></p>
+						<p><b>Type</b> <span> Personnal project [By my brother & me]</span></p>
+						<p><b>Period</b> <span> April-June 2018 (17 yo)</span></p>
+						<p><b>Budget</b> <span> ~ €30</span></p>
+						<p><b>Description</b> <span>A metal tank equipped with alloy tracks, aluminum wheels, steel geared motors, an Arduino Nano, LEDs, buttons, an accelerometer, a gyroscope, a camera and integrated virtual reality, designed to move forward, backward, turn on itself, activate LEDs, orient its turret and generate virtual reality.</span></p>
+						<p><b>Link</b> <span><a href="https://adrianodiventi.wixsite.com/portfolio/"> My brother website</a><img src="gif/white-article.png" data-animated="gif/white-article.gif" style="width: 30px; float: right; margin-right: 15px"></span></p>
+					</div>
+					
+					<!-- Photo principale n°3 -->
+					<div class="photo" onclick="openImage(this)"><img src="images\Mes Projets\B - D 20/image accueil.png">
+					<p class="descriptionText hover-gif">
+							B-D 20 - 2019
+							<img class="play-button-container" src="gif/white-play.png" data-animated="gif/white-play.gif" style="width: 30px; float: right;">
+						</p>
+					</div>
+					<div class="description hover-gif" >
+						<p><b>Name</b> <span> B-D 20</span></p>
+						<p><b>Type</b> <span> Final year project (High school 2019) [Solo]</span></p>
+						<p><b>Period</b> <span> January-June 2019 (18 yo)</span></p>
+						<p><b>Budget</b> <span> ~ €160</span></p>
+						<p><b>Description</b> <span>Project B–D 20 consists of an autonomous sweeping robot for cleaning a school building. The main constraints included navigation under furniture, avoidance of obstacles, stairs leading to the lower floor, as well as automatic recharging.</span></p>
+						<p><b>Link</b> <span> /<img src="gif/white-article.png" data-animated="gif/white-article.gif" style="width: 30px; float: right; margin-right: 15px"></span></p>
+					</div>
+					
+					<!-- Photo principale n°5 -->
+					<div class="photo" onclick="openImage(this)"><img src="images\Mes Projets\Portillon Poulailler\image accueil.jpeg">
+					<p class="descriptionText hover-gif">
+							Chicken coop door - 2020
+							<img class="play-button-container" src="gif/white-play.png" data-animated="gif/white-play.gif" style="width: 30px; float: right;">
+						</p>
+					</div>
+					<div class="description hover-gif" >
+						<p><b>Name</b> <span> Chicken coop door</span></p>
+						<p><b>Type</b> <span> Personnal project [Solo]</span></p>
+						<p><b>Period</b> <span> August-November 2020 (19 yo)</span></p>
+						<p><b>Budget</b> <span> ~ €35</span></p>
+						<p><b>Description</b> <span> Made of recycled components, this automatic gate incorporates an automatic positioning sensor and can be controlled locally or remotely via GSM, facilitating automated opening and closing for chickens. It has never had a breakdown since it was put into service.</span></p>
+						<p><b>Link</b> <span>/<img src="gif/white-article.png" data-animated="gif/white-article.gif" style="width: 30px; float: right; margin-right: 15px"></span></p>
+					</div>
+					
+					<!-- Photo principale n°2 -->
+					<div class="photo" onclick="openImage(this)"><img src="images/Mes Projets/ArduiTank/image accueil.png">
+					<p class="descriptionText hover-gif">
+							Arduitank - 2021
+							<img class="play-button-container" src="gif/white-play.png" data-animated="gif/white-play.gif" style="width: 30px; float: right;">
+						</p>
+					</div>
+					<div class="description hover-gif" >
+						<p><b>Name</b> <span> Arduitank</span></p>
+						<p><b>Type</b> <span> School project [By 4 students]</span></p>
+						<p><b>Period</b> <span> January-June 2021 (20 yo)</span></p>
+						<p><b>Budget</b> <span> ~ €40</span></p>
+						<p><b>Description</b> <span>A wireless remote-controlled tank equipped with sonar, double articulation of the turret, RFID TAG reader, LCD display, LEDs and buzzer. Produced as part of a robotics course in the 2nd year of a bachelor's degree.</span></p>
+						<p><b>Link</b> <span> <a href="https://arduitank.be/"> Website</a> <img src="gif/white-article.png" data-animated="gif/white-article.gif" style="width: 30px; float: right; margin-right: 15px"></span></p>
+					</div>
+					
+					
+					<!-- Photo principale n°9 -->
+					<div class="photo" onclick="openImage(this)"><img src="images\Mes Projets\Servante - Muret\image accueil.jpg">
+					<p class="descriptionText">
+							Multi-tier Wall - 2021
+						</p>
+					</div>
+					<div class="description hover-gif" >
+						<p><b>Name</b> <span> Multi-tier Wall</span></p>
+						<p><b>Type</b> <span> Personnal project [Solo]</span></p>
+						<p><b>Period </b> <span> August 2021 (20 yo)</span></p>
+						<p><b>Budget</b> <span> ~ €35 </span></p>
+						<p><b>Description</b> <span> Design of a multi-tier wall-mounted tool cabinet to facilitate various tasks such as laptop assembly and PCB soldering, with tools arranged in decreasing weight from bottom to top.</span></p>
+						<p><b>Link</b> <span>/<img src="gif/white-article.png" data-animated="gif/white-article.gif" style="width: 30px; float: right; margin-right: 15px"></span></p>
+					</div>
+					
+					<!-- Photo principale n°8 -->
+					<div class="photo" onclick="openImage(this)"><img src="images\Mes Projets\Crusher\image accueil.jpg">
+					<p class="descriptionText hover-gif">
+							Crusher - 2021
+							<img class="play-button-container" src="gif/white-play.png" data-animated="gif/white-play.gif" style="width: 30px; float: right;">
+						</p>
+					</div>
+					<div class="description hover-gif" >
+						<p><b>Name</b> <span> Crusher</span></p>
+						<p><b>Type</b> <span> School project [By 4 students]</span></p>
+						<p><b>Period </b> <span> November-December 2021 (20-21 yo)</span></p>
+						<p><b>Budget</b> <span> ~ €45 </span></p>
+						<p><b>Description</b> <span> Initially planned as a home automation project, the project evolved into the integration of mechanics into an electric vehicle with adaptive suspensions, as well as a remote control and an additional camera. This vehicle can reach a maximum speed of 65 km/h when empty.</span></p>
+						<p><b>Link</b> <span>/<img src="gif/white-article.png" data-animated="gif/white-article.gif" style="width: 30px; float: right; margin-right: 15px"></span></p>
+					</div>
+					
+					<!-- Photo principale n°1 -->
+					<div class="photo" onclick="openImage(this)"><img src="images/Mes Projets/Industry 4.0 prototyping Boards/image accueil.png">
+					<p class="descriptionText hover-gif">
+							Industry 4.0 prototyping Boards - 2022
+							<img class="play-button-container" src="gif/white-play.png" data-animated="gif/white-play.gif" style="width: 30px; float: right;">
+						</p>
+					</div>	
+					<div class="description hover-gif" >
+						<p><b>Name</b> <span> Industry 4.0 prototyping Boards</span></p>
+						<p><b>Type</b> <span> Final year project (Bachelor 2022) [Solo]</span></p>
+						<p><b>Period</b> <span> January-June 2022 (21 yo)</span></p>
+						<p><b>Budget</b> <span> ~ €120</span></p>
+						<p><b>Description</b> <span>Implementation of Industry 4.0 and IoT applications. PCB design integrating sensors, actuators and communication protocols, including Wi-Fi, Bluetooth, Zigbee, LoRa, SigFox, CAN, IR, I²C and SPI.</span></p>
+						<p><b>Link</b> <span> <a href="https://github.com/DavideDiVenti/TFE-3AU-2022"> Github repository</a> <img src="gif/white-article.png" data-animated="gif/white-article.gif" style="width: 30px; float: right; margin-right: 15px"></span></p>
+					</div>
+					
+					<!-- Photo principale n°7 -->
+					<div class="photo" onclick="openImage(this)"><img src="images\Mes Projets\Baby Foot\image accueil.jpg">
+					<p class="descriptionText">
+							Baby Foot - V1:2019, V2:2022
+						</p>
+					</div>
+					<div class="description hover-gif" >
+						<p><b>Name</b> <span> Baby Foot</span></p>
+						<p><b>Type</b> <span> Personnal project [Solo]</span></p>
+						<p><b>Period </b> <span> V1 : April 2019 (18 yo); V2 : August 2022 (21 yo)</span></p>
+						<p><b>Budget</b> <span> V1 : ~ €15; V2 : ~ €140 </span></p>
+						<p><b>Description</b> <span> A homemade baby foot for training, designed with recycled materials and a limited budget, which reinforced my skills and performance during matches against my rhetoric classmates.</span></p>
+						<p><b>Link</b> <span>/<img src="gif/white-article.png" data-animated="gif/white-article.gif" style="width: 30px; float: right; margin-right: 15px"></span></p>
+					</div>
+					
+					<!-- Photo principale n°11 -->
+					<div class="photo" onclick="openImage(this)"><img src="images\Mes Projets\myVacuum\image accueil.jpg">
+					<p class="descriptionText">
+							myVacuum - 2023
+						</p>
+					</div>
+					<div class="description hover-gif" >
+						<p><b>Name</b> <span> myVacuum</span></p>
+						<p><b>Type</b> <span> School project [Solo]</span></p>
+						<p><b>Period </b> <span> February-Juni 2023 (22 yo)</span></p>
+						<p><b>Budget</b> <span> ~25 € </span></p>
+						<p><b>Description</b> <span> Creation of a vacuum cleaner using a PC heatsink. Featuring a fill level indicator, a reservoir air quality sensor, and other components, the status of the vacuum cleaner can be monitored and controlled via a small wired monitor or online.</span></p>
+						<p><b>Link</b> <span><a href="https://github.com/DavideDiVenti/myVacuum/tree/main"> Github repository</a><img src="gif/white-article.png" data-animated="gif/white-article.gif" style="width: 30px; float: right; margin-right: 15px"></span></p>
+					</div>
+					
+					<!-- Photo principale n°12 -->
+					<div class="photo" onclick="openImage(this)"><img src="images\Mes Projets\myCNC\image accueil.png">
+					<p class="descriptionText hover-gif">
+							myCNC - 2023
+							<img class="play-button-container" src="gif/white-play.png" data-animated="gif/white-play.gif" style="width: 30px; float: right;">
+						</p>
+						</div>
+					<div class="description hover-gif" >
+						<p><b>Name</b> <span> myCNC</span></p>
+						<p><b>Type</b> <span> Personnal project [Solo]</span></p>
+						<p><b>Period </b> <span> Juli-August 2023 (22 yo)</span></p>
+						<p><b>Budget</b> <span> ~80 € </span></p>
+						<p><b>Description</b> <span> Creation of a CNC machine for cutting aluminum for future projects. The entire structure is handcrafted, and the firmware used will be FluidNC. Project still in progress.</span></p>
+						<p><b>Link</b> <span>/<img src="gif/white-article.png" data-animated="gif/white-article.gif" style="width: 30px; float: right; margin-right: 15px"></span></p>
+					</div>
+					
+					<!-- Photo principale n°13 -->
+					<div class="photo" onclick="openImage(this)"><img src="images\Mes Projets\myTouch.gb\image accueil.png">
+					<p class="descriptionText hover-gif">
+							myTouch.gb - 2023
+							<img class="play-button-container" src="gif/white-play.png" data-animated="gif/white-play.gif" style="width: 30px; float: right;">
+						</p>
+					</div>
+					<div class="description hover-gif" >
+						<p><b>Name</b> <span> myTouch.gb</span></p>
+						<p><b>Type</b> <span> School project [Solo]</span></p>
+						<p><b>Period </b> <span> September-November 2023 (22 yo)</span></p>
+						<p><b>Budget</b> <span> ~30 € </span></p>
+						<p><b>Description</b> <span> A retro console inspired by the Game Boy, with a similar interface and semi-electrostatic non-mechanical buttons. Presented at the Brotaru event on December 4, 2023.</span></p>
+						<p><b>Link</b> <span>/<img src="gif/white-article.png" data-animated="gif/white-article.gif" style="width: 30px; float: right; margin-right: 15px"></span></p>
+					</div>
+					
+					<!-- Photo principale n°14 -->
+					<div class="photo" onclick="openImage(this)"><img src="images\Mes Projets\myBugs\image accueil.png">
+					<p class="descriptionText hover-gif">
+							myBugs - 2024
+							<img class="play-button-container" src="gif/white-play.png" data-animated="gif/white-play.gif" style="width: 30px; float: right;">
+						</p>
+					</div>
+					<div class="description hover-gif" >
+						<p><b>Name</b> <span> myBugs</span></p>
+						<p><b>Type</b> <span> School project [Solo]</span></p>
+						<p><b>Period </b> <span> February-April 2024 (23 yo)</span></p>
+						<p><b>Budget</b> <span> ~160 € </span></p>
+						<p><b>Description</b> <span> Creation of ladybug robots for the Eurobot Robotix's competition in Belgium in April 2024. Equipped with sensors and a camera, they earn points by entering zones and pollinating plants but are disqualified if they collide with opposing robots.</span></p>
+						<p><b>Link</b> <span>/<img src="gif/white-article.png" data-animated="gif/white-article.gif" style="width: 30px; float: right; margin-right: 15px"></span></p>
+					</div>
+					
+				</div>
+			</div>
+			
+			<br><br><br>
+			<div class="cataloge_section" style="padding-left:5px" >
+				
+				
+				<!-- Plus de photo de la photo principale n°6 -->
+				<div id="catalog1"  style="display:none">
+					<div class="photos">
+						<div class="catalog-photo" ><img src="images/Mes Projets/Pont Pegasus/1.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/Pont Pegasus/2.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/Pont Pegasus/3.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/Pont Pegasus/4.png" onclick="zoomImage(this)"></div>
+					</div>
+					<div class="video-container">
+						<iframe src="https://www.youtube.com/embed/7_xXkNLL9iQ" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+					</div>
+				</div>
+				
+				<!-- Plus de photo de la photo principale n°10 -->
+				<div id="catalog2"  style="display:none">
+					<div class="photos">
+						<div class="catalog-photo" ><img src="images/Mes Projets/Alimentation/1.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/Alimentation/2.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/Alimentation/3.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/Alimentation/4.png" onclick="zoomImage(this)"></div>
+					</div>
+					<div class="video-container" style="display:none">
+						<iframe src="https://www.youtube.com/embed/???" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+					</div>
+				</div>
+				
+				<!-- Plus de photo de la photo principale n°4 -->
+				<div id="catalog3"  style="display:none">
+					<div class="photos">
+						<div class="catalog-photo" ><img src="images/Mes Projets/Char de M. Propre/1.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/Char de M. Propre/2.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/Char de M. Propre/3.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/Char de M. Propre/4.png" onclick="zoomImage(this)"></div>
+					</div>
+					<div class="video-container">
+						<iframe src="https://www.youtube.com/embed/k-Yk2NHGJCU" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+					</div>
+				</div>
+				
+				<!-- Plus de photo de la photo principale n°3 -->
+				<div id="catalog4"  style="display:none">
+					<div class="photos">
+						<div class="catalog-photo" ><img src="images/Mes Projets/B - D 20/1.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/B - D 20/2.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/B - D 20/3.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/B - D 20/4.png" onclick="zoomImage(this)"></div>
+					</div>
+					<div class="video-container">
+						<iframe src="https://www.youtube.com/embed/GxI1J14osK0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+					</div>
+				</div>
+				
+				<!-- Plus de photo de la photo principale n°5 -->
+				<div id="catalog5"  style="display:none">
+					<div class="photos">
+						<div class="catalog-photo" ><img src="images/Mes Projets/Portillon Poulailler/1.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/Portillon Poulailler/2.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/Portillon Poulailler/3.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/Portillon Poulailler/4.png" onclick="zoomImage(this)"></div>
+					</div>
+					<div class="video-container">
+						<iframe src="https://www.youtube.com/embed/YIuqO0xOzEo" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+					</div>
+				</div>
+				
+				<!-- Plus de photo de la photo principale n°2 -->
+				<div id="catalog6"  style="display:none">
+					<div class="photos">
+						<div class="catalog-photo" ><img src="images/Mes Projets/ArduiTank/1.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/ArduiTank/2.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/ArduiTank/3.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/ArduiTank/4.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/ArduiTank/5.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/ArduiTank/6.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/ArduiTank/7.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/ArduiTank/8.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/ArduiTank/9.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/ArduiTank/10.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/ArduiTank/11.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/ArduiTank/12.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/ArduiTank/13.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/ArduiTank/14.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/ArduiTank/15.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/ArduiTank/16.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/ArduiTank/17.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/ArduiTank/18.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/ArduiTank/19.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/ArduiTank/20.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/ArduiTank/21.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/ArduiTank/22.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/ArduiTank/23.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/ArduiTank/24.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/ArduiTank/25.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/ArduiTank/26.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/ArduiTank/27.png" onclick="zoomImage(this)"></div>
+					</div>
+					<div class="video-container">
+						<iframe src="https://www.youtube.com/embed/F7hCh6gzTxs" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+					</div>
+				</div>
+				
+				<!-- Plus de photo de la photo principale n°9 -->
+				<div id="catalog7"  style="display:none">
+					<div class="photos">
+						<div class="catalog-photo" ><img src="images/Mes Projets/Servante - Muret/1.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/Servante - Muret/2.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/Servante - Muret/3.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/Servante - Muret/4.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/Servante - Muret/5.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/Servante - Muret/6.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/Servante - Muret/7.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/Servante - Muret/8.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/Servante - Muret/9.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/Servante - Muret/10.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/Servante - Muret/11.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/Servante - Muret/12.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/Servante - Muret/13.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/Servante - Muret/14.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/Servante - Muret/15.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/Servante - Muret/16.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/Servante - Muret/17.png" onclick="zoomImage(this)"></div>
+					</div>
+					<div class="video-container" style="display:none">
+						<iframe src="https://www.youtube.com/embed/???" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+					</div>
+				</div>
+				
+				<!-- Plus de photo de la photo principale n°8 -->
+				<div id="catalog8"  style="display:none">
+					<div class="photos">
+						<div class="catalog-photo" ><img src="images/Mes Projets/Crusher/1.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/Crusher/2.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/Crusher/3.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/Crusher/4.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/Crusher/5.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/Crusher/6.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/Crusher/7.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/Crusher/8.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/Crusher/9.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/Crusher/10.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/Crusher/11.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/Crusher/12.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/Crusher/13.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/Crusher/14.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/Crusher/15.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/Crusher/16.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/Crusher/17.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/Crusher/18.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/Crusher/19.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/Crusher/20.png" onclick="zoomImage(this)"></div>
+						
+					</div>
+					<div class="video-container">
+						<iframe src="https://www.youtube.com/embed/6FTMAvmMvb4" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+					</div>
+				</div>
+				
+				<!-- Plus de photo de la photo principale n°1 -->
+				<div id="catalog9"style="display:none">						
+					<div class="photos">
+						<div class="catalog-photo" ><img src="images/Mes Projets/Industry 4.0 prototyping Boards/1.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/Industry 4.0 prototyping Boards/2.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/Industry 4.0 prototyping Boards/3.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/Industry 4.0 prototyping Boards/4.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/Industry 4.0 prototyping Boards/5.png" onclick="zoomImage(this)"></div>			
+						<div class="catalog-photo" ><img src="images/Mes Projets/Industry 4.0 prototyping Boards/6.png" onclick="zoomImage(this)"></div>							
+					</div>
+					<div class="video-container">
+						<iframe src="https://www.youtube.com/embed/wpZFFHDfnJo" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+					</div>		
+				</div>
+				
+				<!-- Plus de photo de la photo principale n°7 -->
+				<div id="catalog10"  style="display:none">
+					<div class="photos">
+						<div class="catalog-photo" ><img src="images/Mes Projets/Baby Foot/1.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/Baby Foot/2.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/Baby Foot/3.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/Baby Foot/4.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/Baby Foot/5.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/Baby Foot/6.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/Baby Foot/7.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/Baby Foot/8.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/Baby Foot/9.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/Baby Foot/10.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/Baby Foot/11.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/Baby Foot/12.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/Baby Foot/13.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/Baby Foot/14.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/Baby Foot/15.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/Baby Foot/16.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/Baby Foot/17.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/Baby Foot/18.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/Baby Foot/19.png" onclick="zoomImage(this)"></div>
+					</div>
+					<div class="video-container" style="display:none">
+						<iframe src="https://www.youtube.com/embed/Bwp3QHGVwpE" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+					</div>
+				</div>
+							
+				<!-- Plus de photo de la photo principale n°11 -->
+				<div id="catalog11"  style="display:none">
+					<div class="photos">
+						<div class="catalog-photo" ><img src="images/Mes Projets/myVacuum/1.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/myVacuum/2.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/myVacuum/3.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/myVacuum/4.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/myVacuum/5.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/myVacuum/6.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/myVacuum/7.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/myVacuum/8.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/myVacuum/9.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/myVacuum/10.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/myVacuum/11.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/myVacuum/12.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/myVacuum/13.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/myVacuum/14.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/myVacuum/15.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/myVacuum/16.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/myVacuum/17.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/myVacuum/18.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/myVacuum/19.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/myVacuum/20.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/myVacuum/21.png" onclick="zoomImage(this)"></div>						
+					</div>
+					<div class="video-container" style="display:none">
+						<iframe src="https://www.youtube.com/embed/???" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+					</div>
+				</div>
+				
+				<!-- Plus de photo de la photo principale n°12 -->
+				<div id="catalog12"  style="display:none">
+					<div class="photos">
+						<div class="catalog-photo" ><img src="images/Mes Projets/myCNC/1.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/myCNC/2.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/myCNC/3.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/myCNC/4.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/myCNC/5.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/myCNC/6.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/myCNC/7.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/myCNC/8.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/myCNC/9.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/myCNC/10.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/myCNC/11.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/myCNC/12.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/myCNC/13.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/myCNC/14.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/myCNC/15.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/myCNC/16.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/myCNC/17.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/myCNC/18.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/myCNC/19.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/myCNC/20.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/myCNC/21.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/myCNC/22.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/myCNC/23.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/myCNC/24.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/myCNC/25.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/myCNC/26.png" onclick="zoomImage(this)"></div>
+						
+						
+					</div>
+					<div class="video-container">
+						<iframe src="https://www.youtube.com/embed/HtU-RUHbRa8" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+					</div>
+				</div>
+				
+				<!-- Plus de photo de la photo principale n°12 -->
+				<div id="catalog13"  style="display:none">
+					<div class="photos">
+						<div class="catalog-photo" ><img src="images/Mes Projets/myTouch.gb/1.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/myTouch.gb/2.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/myTouch.gb/3.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/myTouch.gb/4.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/myTouch.gb/5.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/myTouch.gb/6.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/myTouch.gb/7.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/myTouch.gb/8.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/myTouch.gb/9.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/myTouch.gb/10.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/myTouch.gb/11.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/myTouch.gb/12.png" onclick="zoomImage(this)"></div>
+				
+					</div>
+					<div class="video-container">
+						<iframe src="https://www.youtube.com/embed/SUMLyFAfQ6g" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+					</div>
+				</div>
+				
+				<!-- Plus de photo de la photo principale n°12 -->
+				<div id="catalog14"  style="display:none">
+					<div class="photos">
+						<div class="catalog-photo" ><img src="images/Mes Projets/myBugs/1.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/myBugs/2.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/myBugs/3.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/myBugs/4.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/myBugs/5.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/myBugs/6.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/myBugs/7.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/myBugs/8.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/myBugs/9.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/myBugs/10.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/myBugs/11.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/myBugs/12.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/myBugs/13.png" onclick="zoomImage(this)"></div>
+						<div class="catalog-photo" ><img src="images/Mes Projets/myBugs/14.png" onclick="zoomImage(this)"></div>
+						
+				
+					</div>
+					<div class="video-container">
+						<iframe src="https://www.youtube.com/embed/vju5BIe06Is" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+					</div>
+				</div>
+				
+				
+			</div>
+        </div>
+    </div>
+	
+
+<script>
+
+document.addEventListener('DOMContentLoaded', function() {
+    var backgroundLayer = document.getElementById('background-layer');
+    var imageIndex = 2; // Commencer avec l'image 2 au lieu de l'image 1
+    var totalImages = 7;
+    var isLoading = false;
+
+    // Fonction pour changer l'image de fond
+    function changeBackgroundImage() {
+        if (isLoading) return; // Si déjà en train de charger, ne pas lancer une nouvelle requête
+
+        var imageUrl = "images/Accueil/list/" + imageIndex + ".jpg";
+        isLoading = true; // Marquer comme en cours de chargement
+
+        // Charger la nouvelle image en tant qu'objet Image
+        var img = new Image();
+        img.onload = function() {
+            // Une fois l'image chargée, démarrer la transition
+            backgroundLayer.style.transition = 'opacity 1s ease-in-out'; // Transition de 1 seconde
+            backgroundLayer.style.opacity = 0; // Réduire l'opacité à 0
+
+            // Délai pour permettre le fondu à l'opacité 0
+            setTimeout(function() {
+                backgroundLayer.style.backgroundImage = "url('" + imageUrl + "')";
+                backgroundLayer.style.opacity = 1; // Rétablir l'opacité à 1
+                isLoading = false; // Marquer comme chargé
+            }, 1000); // Délai pour une transition plus douce
+        };
+        img.src = imageUrl; // Déclencher le chargement de l'image
+
+        // Incrémenter l'index pour la prochaine image
+        imageIndex = imageIndex % totalImages + 1;
+    }
+
+    // Changer l'image toutes les 10 secondes après un court délai initial
+    setTimeout(function() {
+        changeBackgroundImage();
+        setInterval(changeBackgroundImage, 10000);
+    }, 10000); // Délai initial avant le premier changement d'image
+});
+
+// À appeler lors de la navigation via l'historique
+window.addEventListener('popstate', function(event) {
+    // Recharger la page lorsque l'utilisateur utilise le bouton "précédent"
+    window.location.reload();
+	
+});
+
+document.addEventListener("DOMContentLoaded", function() {
+        // Ajouter #catalog à l'URL
+        history.replaceState(null, '', '#catalog');
+        
+        // Optionnel: Appeler une fonction pour gérer ce hash
+        handlePageChange('catalog');
+ 
+});
+
+
+function openImage(selectedImage) {
+	
+	
+    var photos = document.querySelectorAll('.photo');
+    var descriptions = document.querySelectorAll('.description');
+    var catalogs = document.querySelectorAll('[id^="catalog"]');
+    
+    // Trouver l'index de l'image sélectionnée
+    var index = Array.from(photos).indexOf(selectedImage);  
+	const newHash = `project${index + 1}`;
+    
+    // Ajouter une nouvelle entrée dans l'historique sans recharger la page
+    history.pushState({ page: newHash }, '', `#${newHash}`);
+
+    var textElement = selectedImage.querySelector('.descriptionText');
+    textElement.textContent = 'BACK';
+	
 
 	
-	</body>
+	var guide = document.querySelector('.guide');
+    guide.style.width = "calc(100% - 5px)"; // Largeur de 100% moins une marge de 100px
+    guide.style.marginRight = "5px";
+	
+    // Masquer toutes les descriptions sauf celle correspondante
+    descriptions.forEach(function(desc, idx) {
+        if (idx === index) {
+            if (desc.style.display === 'block') {
+                // Si la description est déjà affichée, quitter la fonction
+                return;
+            }
+            desc.style.display = 'grid';
+            desc.classList.add('bounce-animation'); // Ajouter l'animation de rebondissement
+        } else {
+            desc.style.display = 'none';
+        }
+    });
+
+    // Désactiver l'interaction de l'image une fois que la description est affichée
+    selectedImage.onclick = null;
+    selectedImage.onclick = function() {
+        location.reload(); // Utiliser la fonction de navigation arrière du navigateur
+    };
+
+    // Masquer toutes les autres images sauf l'image sélectionnée
+    photos.forEach(function(photo) {
+        if (photo !== selectedImage) {
+            photo.style.opacity = '0';
+            photo.style.display = 'none';
+        }
+    });
+
+    // Masquer tous les catalogues
+    catalogs.forEach(function(catalog) {
+        catalog.style.display = 'none';
+    });
+
+    // Afficher le catalogue correspondant à l'image cliquée
+    var catalog = document.getElementById('catalog' + (index + 1));
+    if (catalog) {
+        catalog.style.display = 'block';
+    }
+
+    // Déplacer l'image sélectionnée au début de la liste visuelle
+    var firstPhoto = photos[0];
+    selectedImage.parentNode.insertBefore(selectedImage, firstPhoto);
+
+    // Ajouter une classe pour l'animation de secouement
+    selectedImage.classList.add('up-animation');
+
+    // Après un court délai, enlever la classe et réinitialiser les styles
+    setTimeout(function() {
+        selectedImage.classList.remove('up-animation');
+    }, 1000); // Délai pour laisser la transition terminer et les autres images être masquées
+	
+
+}
+
+// Écouter l'événement 'popstate' pour gérer la navigation arrière et avant
+window.addEventListener('popstate', function(event) {
+    if (event.state && event.state.page) {
+        const hash = event.state.page;
+        console.log('Navigating to:', hash);
+
+        // Mettre à jour l'interface selon l'état restauré
+        handlePageChange(hash);
+    }
+});
+
+function handlePageChange(hash) {
+    // Mettre à jour l'interface selon le hash ou l'état
+    console.log('Handling page change for:', hash);
+    // Exemple: ouvrir une image ou charger du contenu spécifique
+}
+var currentZoomIndex = 0; // Variable globale pour suivre l'index de l'image zoomée
+var catalogPhotos = []; // Tableau pour stocker les images du catalogue actuel
+
+function zoomImage(selectedImage) {
+    // Créer un élément div pour l'effet de zoom
+    var zoomContainer = document.createElement('div');
+    zoomContainer.classList.add('zoomed-in');
+
+    // Créer une copie de l'image sélectionnée
+    var zoomedImage = document.createElement('img');
+    zoomedImage.src = selectedImage.src;
+    zoomedImage.alt = selectedImage.alt;
+
+    // Ajouter l'image agrandie dans le conteneur de zoom
+    zoomContainer.appendChild(zoomedImage);
+
+    // Ajouter le conteneur de zoom à la page
+    document.body.appendChild(zoomContainer);
+
+    // Ajouter des flèches de navigation pour le zoom
+    var zoomNavigation = document.createElement('div');
+    zoomNavigation.classList.add('zoom-navigation');
+    zoomNavigation.innerHTML = '<div class="zoom-navigation" ><img src="gif/white-next.png" class="zoom-nav-button prev-button" onclick="navigateZoom(\'prev\')" style=" transform: rotate(-90deg);"><img src="gif/white-next.png" class="zoom-nav-button next-button" onclick="navigateZoom(\'next\')" style=" transform: rotate(90deg);"></div>';
+   
+
+	document.body.appendChild(zoomNavigation);
+
+    // Gérer la fermeture de l'image agrandie lors du clic sur l'écran
+    zoomContainer.onclick = function() {
+        zoomContainer.remove(); // Retirer l'élément de la page
+        zoomNavigation.remove(); // Retirer les flèches de navigation
+        document.body.style.overflow = ''; // Réactiver le défilement de la page principale
+    };
+
+    // Désactiver le défilement de la page principale lorsque l'image est agrandie
+    document.body.style.overflow = 'hidden';
+
+    // Mettre à jour `catalogPhotos` avec les images du catalogue actuel
+    var catalogSection = selectedImage.closest('.cataloge_section');
+    catalogPhotos = Array.from(catalogSection.querySelectorAll('.catalog-photo img'));
+
+    // Enregistrer l'index de l'image sélectionnée pour la navigation
+    currentZoomIndex = catalogPhotos.findIndex(img => img.src === selectedImage.src);
+}
+
+// Fonction pour vérifier si une image existe réellement
+function imageExists(imageName) {
+    var currentImagePath = getCurrentImagePath(); // Récupérer le chemin actuel à partir de l'image sélectionnée
+    var img = new Image();
+    img.src = currentImagePath + imageName;
+    return img.complete || (img.width > 0 || img.height > 0);
+}
+
+// Fonction pour obtenir le chemin actuel à partir de l'image sélectionnée
+function getCurrentImagePath() {
+    var zoomContainers = document.querySelectorAll('.zoomed-in');
+    var currentZoom = zoomContainers[zoomContainers.length - 1]; // Dernier élément zoomé
+    var currentImage = currentZoom.querySelector('img');
+    var currentImageSrc = currentImage.src;
+    var index = currentImageSrc.lastIndexOf('/');
+    return currentImageSrc.substring(0, index + 1); // Retourne le chemin jusqu'au dernier '/'
+}
+
+// Fonction pour obtenir le nom de l'image suivante
+function getNextImageName(currentImageName) {
+    var currentIndex = parseInt(currentImageName.split('.')[0]);
+    var nextIndex = currentIndex + 1;
+    var nextImageName = nextIndex + '.png';
+
+    // Vérifier si l'image suivante existe réellement
+    if (imageExists(nextImageName)) {
+        return nextImageName;
+    } else {
+        console.log('Image not found, displaying the last image:', currentImageName);
+        return currentImageName; // Retourne l'image actuelle en cas d'erreur
+    }
+}
+
+// Fonction pour naviguer entre les images agrandies
+function navigateZoom(direction) {
+    var zoomContainers = document.querySelectorAll('.zoomed-in');
+    var currentZoom = zoomContainers[zoomContainers.length - 1]; // Dernier élément zoomé
+    var currentImage = currentZoom.querySelector('img');
+    var currentImageSrc = currentImage.src;
+
+    // Récupérer le nom de l'image actuelle
+    var currentImageName = getImageName(currentImageSrc);
+
+    // Déterminer le nom de l'image suivante ou précédente
+    var nextImageName;
+    if (direction === 'prev') {
+        nextImageName = getPreviousImageName(currentImageName);
+    } else if (direction === 'next') {
+        nextImageName = getNextImageName(currentImageName);
+    }
+
+    // Construire le chemin complet de l'image suivante ou précédente
+    var nextImageSrc = currentImageSrc.replace(currentImageName, nextImageName);
+
+    // Mettre à jour l'élément img avec la nouvelle source
+    currentImage.src = nextImageSrc;
+}
+
+// Fonction pour extraire le nom de l'image à partir de son chemin
+function getImageName(imageSrc) {
+    var index = imageSrc.lastIndexOf('/');
+    return imageSrc.substring(index + 1);
+}
+
+// Fonction pour obtenir le nom de l'image précédente
+function getPreviousImageName(currentImageName) {
+    var currentIndex = parseInt(currentImageName.split('.')[0]);
+    if (currentIndex <= 1) {
+        return '1.png'; // Retourne la première image si on est à la première image
+    } else {
+        return (currentIndex - 1) + '.png';
+    }
+}
+
+
+
+
+document.addEventListener("DOMContentLoaded", function() {
+    const hoverElements = document.querySelectorAll(".hover-gif");
+
+    hoverElements.forEach(element => {
+        const img = element.querySelector("img");
+        const animatedSrc = img.getAttribute("data-animated");
+
+        element.addEventListener("mouseenter", () => {
+            img.dataset.static = img.src; // Save the static image src
+            img.src = animatedSrc;
+        });
+
+        element.addEventListener("mouseleave", () => {
+            img.src = img.dataset.static;
+        });
+    });
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+	// Ajouter la classe loaded après un court délai pour déclencher la transition
+	setTimeout(function() {
+		document.querySelector('.main-content').classList.add('loaded');
+	}, 100);
+});
+
+
+
+</script>
+
+</body>
+
 </html>
